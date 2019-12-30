@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//WebContent/WEB-INF/errors/404.jsp=UTF-8
+encoding//WebContent/WEB-INF/errors/500.jsp=UTF-8
+encoding//WebContent/WEB-INF/views/system/login.jsp=UTF-8
+encoding//src/com/chen/programmer/util/CpachaUtil.java=UTF-8
