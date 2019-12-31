@@ -20,23 +20,23 @@
 			<div class="login-center clearfix">
 				<div class="login-center-img"><img src="../resources/login/images/name.png"></div>
 				<div class="login-center-input">
-					<input type="text" name="" value="" placeholder="请输入您的用户名" onfocus="this.placeholder=&#39;&#39;" onblur="this.placeholder=&#39;请输入您的用户名&#39;">
+					<input type="text" name="username" id="username" value="" placeholder="请输入您的用户名" onfocus="this.placeholder=&#39;&#39;" onblur="this.placeholder=&#39;请输入您的用户名&#39;">
 					<div class="login-center-input-text">用户名</div>
 				</div>
 			</div>
 			<div class="login-center clearfix">
 				<div class="login-center-img"><img src="../resources/login/images/password.png"></div>
 				<div class="login-center-input">
-					<input type="password" name="" value="" placeholder="请输入您的密码" onfocus="this.placeholder=&#39;&#39;" onblur="this.placeholder=&#39;请输入您的密码&#39;">
+					<input type="password" name="password" id="password" value="" placeholder="请输入您的密码" onfocus="this.placeholder=&#39;&#39;" onblur="this.placeholder=&#39;请输入您的密码&#39;">
 					<div class="login-center-input-text">密码</div>
 				</div>
 			</div>
 			<div class="login-center clearfix">
-				<div class="login-center-img"><img src="../resources/login/images/password.png"></div>
+				<div class="login-center-img"><img src="../resources/login/images/cpacha_image.png"></div>
 				<div class="login-center-input">
-					<input style="width:50%" type="text" name="" value="" placeholder="请输入验证码" onfocus="this.placeholder=&#39;&#39;" onblur="this.placeholder=&#39;请输入验证码&#39;">
+					<input style="width:50%" type="text" name="cpacha" id="cpacha" value="" placeholder="请输入验证码" onfocus="this.placeholder=&#39;&#39;" onblur="this.placeholder=&#39;请输入验证码&#39;">
 					<div class="login-center-input-text">验证码</div>
-					<img src="get_Cpacha?vl=4&w=110&h=30" width="110px" height="30px"/>
+					<img id="cpacha-img" title="点击切换验证码"style="cursor:pointer"src="get_Cpacha?vl=4&w=110&h=30&type=loginCpacha" width="110px" height="30px" onclick="changeCpacha()"/>
 				</div>
 			</div>
 			<div class="login-button">
@@ -49,6 +49,7 @@
 <!-- scripts -->
 <script src="../resources/login/js/particles.min.js"></script>
 <script src="../resources/login/js/app.js"></script>
+<script src="../resources/login/js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript">
 	function hasClass(elem, cls) {
 	  cls = cls || '';
@@ -71,19 +72,65 @@
 	    ele.className = newClass.replace(/^\s+|\s+$/g, '');
 	  }
 	}
+	
+	function changeCpacha(){//点击切换验证码
+		$("#cpacha-img").attr("src", 'get_Cpacha?vl=4&w=110&h=30&type=loginCpacha&t='+ new Date().getTime());
+		//alert("into change cpacha function");
+	}
+	
 		document.querySelector(".login-button").onclick = function(){
+			
+				var username = $("#username").val();
+				var password = $("#password").val();
+				var cpacha = $("#cpacha").val();
+				if(username == '' || username == 'undefined' || password == '' || password == 'undefined'){
+					//验证用户名或密码不能为空
+					alert("用户名或密码不能为空！");
+					return;
+				}
+				if(cpacha == '' || cpacha == 'undefined'){
+					alert("验证码不能为空！");
+					return;
+				}
+				
 				addClass(document.querySelector(".login"), "active")
-				setTimeout(function(){
+				//setTimeout(function(){
 					addClass(document.querySelector(".sk-rotating-plane"), "active")
 					document.querySelector(".login").style.display = "none"
-				},800)
-				setTimeout(function(){
-					removeClass(document.querySelector(".login"), "active")
-					removeClass(document.querySelector(".sk-rotating-plane"), "active")
-					document.querySelector(".login").style.display = "block"
-					alert("登录成功")
-					
-				},5000)
+				//},800)
+				
+				$.ajax({
+					url:'login',
+					data:{username:username, password:password, cpacha:cpacha},
+					type:'post',
+					dataType:'json',
+					success: function (data){
+						if(data.type == 'success'){// 登录成功
+							window.location = 'index';	
+						}else{// 登录失败
+							
+							//登录动画
+							removeClass(document.querySelector(".login"), "active")
+							removeClass(document.querySelector(".sk-rotating-plane"), "active")
+							document.querySelector(".login").style.display = "block"
+							//弹窗提示错误信息
+							alert(data.msg);
+							// 登录失败，更换验证码
+							changeCpacha();
+						}
+					}
+				});
+			
+				
+				//设置登录动画
+				//setTimeout(function(){
+				//	removeClass(document.querySelector(".login"), "active")
+				//	removeClass(document.querySelector(".sk-rotating-plane"), "active")
+				//	document.querySelector(".login").style.display = "block"
+				//	alert("登录成功")
+				//	
+			//	},5000)
+				
 		}
 </script>
 </body></html>
