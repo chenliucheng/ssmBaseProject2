@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.chen.programmer.entity.admin.User;
+import com.chen.programmer.service.admin.UserService;
 import com.chen.programmer.util.CpachaUtil;
 import com.github.pagehelper.util.StringUtil;
 import com.mysql.jdbc.StringUtils;
@@ -31,6 +33,13 @@ import com.sun.javafx.collections.MappingChange.Map;
 public class SystemController {
 	
 	
+	@Autowired //自动装配，从容器中拿出一个UserService，不用new ,可以直接使用
+	private UserService userservice;
+	
+	
+	
+	
+	
 //	第一种方法：使用String
 //	@RequestMapping(value = "/index",method = RequestMethod.GET)
 //	public String index() {
@@ -39,26 +48,36 @@ public class SystemController {
 //	} 
 	
 //	第二种方法：使用ModelAndView，更加常用
+	//系统登录后的·	index页面
 	@RequestMapping(value = "/index",method = RequestMethod.GET)
-	//登录页面
 	public ModelAndView index(ModelAndView model) {
 		model.setViewName("system/index");
-		model.addObject("name", "chenliucheng ");
 		return model;
 	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)//GET方法进入登录页面
+	
+	//系统登录后的欢迎页面
+	@RequestMapping(value = "/welcome", method = RequestMethod.GET)//GET方法进入登录页面
+	public ModelAndView welcome(ModelAndView model) {
+		
+		model.setViewName("system/welcome");
+		return model;
+	}
+	
+	//登录页面，请求方式为GET方法时使用
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView model) {
 		model.setViewName("system/login");
 		return model;
 	}
-	
+
 	/**
 	 * 登录表单POST方法提交控制器
 	 * @param user
 	 * @param cpacha
 	 * @return
 	 */
+	//登录页面的表单提交，请求方式为POST方法时使用
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody //标注返回的是页面内容，不进行修改
 	public HashMap<String, String>loginAct(User user, String cpacha, HttpServletRequest request){
@@ -106,7 +125,22 @@ public class SystemController {
 			}
 			
 		}
-		//没有空值，提示登录成功
+		//没有空值，说明已经填写用户名密码验证码，接着匹配用户名密码，可用于绑定session
+		User findByUsername = userservice.findByUsername(user.getUsername());
+		if(findByUsername == null) {
+			ret.put("type", "error");
+			ret.put("msg", "该用户名不存在");
+			return ret;
+		}
+		if(!user.getPassword().equals(findByUsername.getPassword())) {
+			ret.put("type", "error");
+			ret.put("msg", "密码错误");
+		}
+		
+		//此处说明用户名密码匹配成功，将登录状态写入session中
+		//session中的值可以直接在jsp页面中通过${}方式获取
+		
+		request.getSession().setAttribute("admin", findByUsername);
 		ret.put("type", "success");
 		ret.put("msg", "登录成功");
 		return  ret;

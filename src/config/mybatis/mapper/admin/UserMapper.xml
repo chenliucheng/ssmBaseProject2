@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- 标识要用到的类的路径 -->
+<mapper namespace="com.chen.programmer.dao.admin.UserDao">
+    <!-- 根据用户名查找用户 -->
+    <!-- id要与用到的方法名对应；parameterType标识传入的参数类型，要与方法的传入类型对应；resultType标识返回的参数类型，要与方法的返回类型对应-->
+    <select id="findByUsername" parameterType="String" resultType="User">
+        <!-- #{username} 表示取名字为username的变量  -->
+		select * from user where username = #{username}
+	</select>
+</mapper>

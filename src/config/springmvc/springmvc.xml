@@ -44,20 +44,18 @@
 	</bean>
 		
 	<!-- 后台访问拦截器-->
-	<!--
+	<!---->
 	 <mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/**"/>
-			<mvc:mapping path="/grade/*"/>
+		    <!--设置不被拦截的页面  -->
+			<mvc:mapping path="/admin"/>
+			<mvc:mapping path="/system/*"/>
 			<mvc:exclude-mapping path="/system/login"/>
-			<mvc:exclude-mapping path="/system/get_cpacha"/>
-			<mvc:exclude-mapping path="/h-ui/**"/>
-			<mvc:exclude-mapping path="/easyui/**"/>
-			<mvc:exclude-mapping path="/home-resources/**"/>
-			<mvc:exclude-mapping path="/home/**"/>
-			<bean class="com.chen.programmer.interceptor.LoginInterceptor"></bean>
+			<mvc:exclude-mapping path="/system/get_Cpacha"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<bean class="com.chen.programmer.interceptor.admin.LoginInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors> 
-	 -->
+	 
 	 
 </beans>

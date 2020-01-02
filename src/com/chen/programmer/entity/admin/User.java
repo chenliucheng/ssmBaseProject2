@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @author Administrator
  *
  */
-@Component
+@Component  //spring框架通过component标价识别，将这个实体类自动加入容器，自动new 
 public class User {
 	private long id; // 用户id，设置为自增
 	private String username; // 用户名
