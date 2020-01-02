@@ -47,9 +47,10 @@
 	<!---->
 	 <mvc:interceptors>
 		<mvc:interceptor>
-		    <!--设置不被拦截的页面  -->
+		    <!--设置拦截的页面  -->
 			<mvc:mapping path="/admin"/>
 			<mvc:mapping path="/system/*"/>
+			<!--设置不被拦截的页面  -->
 			<mvc:exclude-mapping path="/system/login"/>
 			<mvc:exclude-mapping path="/system/get_Cpacha"/>
 			<mvc:exclude-mapping path="/resources/**"/>

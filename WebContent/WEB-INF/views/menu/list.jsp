@@ -36,10 +36,7 @@
             <tr>
                 <td align="right">上级菜单:</td>
                 <td>
-                	<select class="easyui-combobox" panelHeight="auto" style="width:268px">
-                		<input type="hidden" name="parentId" id="add-menu-parent-id">
-                		<input type="text" readonly="readonly" id="parent-menu" class="wu-text easyui-validatebox" />
-           	 		</select>
+                	<input type="text" id="parentId" name="parentId" class="wu-text" panelHeight="auto" style="width:268px"/>
                 </td>
             </tr>
             <tr>
@@ -73,18 +70,20 @@
 		var name = $("#name").val();
 		var url = $("#url").val();
 		var icon = $("#icon").val();
+		var parentId = $("#parentId").val(); 
 		if(!validate){
 			$.messager.alert("消息提醒","请检查你输入的数据:", "warning");
 			return;
 		}
-		debugger
+		//debugger  用于打断点
 		//var data = $("add-form").serialize();//表单序列化，表单数据转换为json
 		//console.log(data);
 		$.ajax( {
-			url:'add',
+			url:'../admin/menu/add',
 			dataType:'json',
 			type:'post',
-			data:  {name:name,url:url,icon:icon},
+			//从页面传入的参数要和实体类的类型对应不然会报 400 错误，重点！！！！！！
+			data:  {name:name,url:url,parentId:parentId,icon:icon},
 			success:function(data){
 				if(data.type == 'success'){
 					$.messager.alert('信息提示','添加成功！','info');

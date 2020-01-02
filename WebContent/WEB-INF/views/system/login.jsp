@@ -108,7 +108,7 @@
 						
 						if(data.type == 'success'){// 登录成功
 							
-							document.querySelector(".login").style.display = "block"
+							//document.querySelector(".login").style.display = "block"
 							window.location = 'index';	
 						}else{// 登录失败
 							
