@@ -240,24 +240,21 @@
 	* Name 载入数据
 	*/
 	$('#data-datagrid').datagrid({
-		url:'temp/datagrid.php',
+		url:'../admin/menu/list',
 		loadFilter:pagerFilter,		
-		rownumbers:true,
-		singleSelect:false,
-		pageSize:20,           
-		pagination:true,
-		multiSort:true,
-		fitColumns:true,
-		fit:true,
+		rownumbers:true, // 设置显示行号
+		singleSelect:true,  // false设置可以多选，true设置只能单选
+		pageSize:20,  // 设置每页显示20条         
+		pagination:true,    //是否分页，true为分页
+		multiSort:true,    //
+		fitColumns:true,   //填充
+		fit:true,	//
 		columns:[[
 			{ checkbox:true},
-			{ field:'productid',title:'productid',width:100,sortable:true},
-			{ field:'productname',title:'productname',width:180,sortable:true},
-			{ field:'unitcost',title:'unitcost',width:100},
-			{ field:'listprice',title:'listprice',width:100},
-			{ field:'attr1',title:'attr1',width:100},
-			{ field:'itemid',title:'itemid',width:100},
-			{ field:'status',title:'status',width:100}
+			//真正从数据库拿出的要显示的字段
+			{ field:'name',title:'菜单名称',width:100,sortable:true},
+			{ field:'url',title:'菜单URL',width:180,sortable:true},
+			{ field:'icon',title:'图标icon',width:100}
 		]]
 	});
 </script>

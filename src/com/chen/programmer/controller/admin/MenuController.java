@@ -1,17 +1,40 @@
 package com.chen.programmer.controller.admin;
 
 import java.util.HashMap;
+<<<<<<< HEAD
+import java.util.LinkedList;
+import java.util.concurrent.Executor;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.Session;
+
+import org.apache.ibatis.session.SqlSession;
+=======
+
+>>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+<<<<<<< HEAD
+import org.springframework.web.bind.annotation.RequestParam;
+=======
+>>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.chen.programmer.entity.admin.Menu;
+<<<<<<< HEAD
+import com.chen.programmer.page.admin.Page;
 import com.chen.programmer.service.admin.MenuService;
 import com.github.pagehelper.util.StringUtil;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+=======
+import com.chen.programmer.service.admin.MenuService;
+import com.github.pagehelper.util.StringUtil;
+>>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 
 /**
  * 菜单管理控制器
@@ -38,6 +61,32 @@ public class MenuController {
 	}
 	
 	/**
+<<<<<<< HEAD
+	 * 获取菜单列表
+	 * @param page
+	 * @param name
+	 * @return
+	 */
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	@ResponseBody
+	public HashMap<String, Object> MenuList(Page page,
+			@RequestParam(name = "name", required = false, defaultValue = "")String name
+			){
+		//System.out.println(11111111); // 打印log
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+		HashMap<String, Object> queryHashMap = new HashMap<String, Object>();
+		queryHashMap.put("offset", page.getOffset());
+		queryHashMap.put("pageSize", page.getRows());
+		queryHashMap.put("name", name);
+		LinkedList<Menu> findList = menuService.findList(queryHashMap);
+		ret.put("rows", findList);
+		ret.put("total", 10);
+		return ret;
+	}
+	
+	/**
+=======
+>>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 	 * 菜单添加
 	 * @param menu
 	 * @return
@@ -72,6 +121,12 @@ public class MenuController {
 		}
 		//打印数据库操作条数
 		int i =  menuService.add(menu);
+<<<<<<< HEAD
+		if( i == 1) {
+			//当执行结果为1条时，需要手动commit
+		}
+=======
+>>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 		System.out.println("----"+i);
 		ret.put("type", "success");
 		ret.put("msg", "添加成功");
