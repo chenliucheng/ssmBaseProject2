@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +27,7 @@
     </div>
 </div>
 <!-- Begin of easyui-dialog -->
-<div id="add-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:400px; padding:10px;">
+<div id="add-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:450px; padding:10px;">
 	<form id="add-form"  method="post">
         <table>
             <tr>
@@ -36,7 +37,12 @@
             <tr>
                 <td align="right">上级菜单:</td>
                 <td>
-                	<input type="text" id="parentId" name="parentId" class="wu-text" panelHeight="auto" style="width:268px"/>
+                	<select name="parentId" class="easyui-combobox" panelHeight="auto" style="width:268px">
+		                <option value="0">顶级分类</option>
+		                <c:forEach items="${topList }" var="menu">
+		                <option value="${menu.id }">${menu.name }</option>
+		                </c:forEach>
+		            </select>
                 </td>
             </tr>
             <tr>
@@ -45,12 +51,25 @@
             </tr>
             <tr>
                 <td valign="top" align="right">菜单图标:</td>
-                <td><input type="text" id="icon" name="icon" class="wu-text easyui-validatebox" data-options="required:true,missingMessage:'请填写菜单图标名称'" /></td>
+                <td>
+                <input type="text" id="icon" name="icon" class="wu-text easyui-validatebox" data-options="required:true,missingMessage:'请填写菜单图标名称'" />
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="selectIcon()" plain="true">选择</a>
+                </td>
             </tr>
         </table>
     </form>
 </div>
 <!-- End of easyui-dialog -->
+
+<!-- 选择图标弹窗 -->
+<div id="select-icon-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:480px;height:450px; padding:10px;">
+	<table id="icons-table" cellspacing="8">
+		<!-- 图标列表动态加入 -->
+	</table>
+</div>
+<!-- 选择图标弹窗结束 -->
+
+
 <script type="text/javascript">
 	/**
 	* Name 载入菜单树
@@ -257,6 +276,67 @@
 			{ field:'icon',title:'图标icon',width:100}
 		]]
 	});
+	
+	/**
+	* 图标上传路径选择框
+	*/
+	function selectIcon(){
+		if($("#icons-table").children().length <= 0){
+			$.ajax({
+				url:'../admin/menu/get_icons',
+				dataType:'json',
+				type:'post',
+				success:function(data){
+					if(data.type == 'success'){
+						var icons = data.content;//获取controller类返回的content
+						var table = '';
+						for(var i = 0;i<icons.length;i++){
+							var tbody = '<td class="icon-td"><a onclick="selected(this)" href="javascript:void(0)" class="'+ icons[i] +'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></td>';
+							if(i == 0){//第一个图标位置
+								table  += '<tr>' + tbody;
+							}
+							if(i != 0 && i%10 == 	0){//每行最后一个图标位置
+								table += tbody + '</tr><tr>' ;
+							}
+							table += tbody;
+						}
+						table += '</tr>';
+						$("#icons-table").append(table);
+					}else{
+						$.messager.alert('信息提示', data.msg, 'warning');
+					}
+				}
+			});
+		}
+		
+		/**
+		*点击图标后的动作
+		*/
+		function selected(e){
+			alert(1111);
+			console.log("123132");
+		}
+		
+		
+		$('#select-icon-dialog').dialog({
+			closed: false,
+			modal:true,
+            title: "选择icon信息",
+            buttons: [{
+                text: '确定',
+                iconCls: 'icon-ok',
+                //点击‘确定’之后就去调用'add'方法（第73行）
+                handler: add
+            }, {
+                text: '取消',
+                iconCls: 'icon-cancel',
+                handler: function () {
+                    $('#add-dialog').dialog('close');                    
+                }
+            }]
+        });
+	}
+	
 </script>
 </body>
 </html>

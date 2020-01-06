@@ -1,40 +1,26 @@
 package com.chen.programmer.controller.admin;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
-<<<<<<< HEAD
+
 import java.util.LinkedList;
-import java.util.concurrent.Executor;
+import java.util.List;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.Session;
 
-import org.apache.ibatis.session.SqlSession;
-=======
-
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.RequestParam;
-=======
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.chen.programmer.entity.admin.Menu;
-<<<<<<< HEAD
 import com.chen.programmer.page.admin.Page;
 import com.chen.programmer.service.admin.MenuService;
 import com.github.pagehelper.util.StringUtil;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
-=======
-import com.chen.programmer.service.admin.MenuService;
-import com.github.pagehelper.util.StringUtil;
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 
 /**
  * 菜单管理控制器
@@ -61,7 +47,6 @@ public class MenuController {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * 获取菜单列表
 	 * @param page
 	 * @param name
@@ -85,8 +70,38 @@ public class MenuController {
 	}
 	
 	/**
-=======
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
+	 * 获取图标
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/get_icons", method = RequestMethod.POST)
+	@ResponseBody
+	public HashMap<String, Object> getIconList(HttpServletRequest request){
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+		//获取项目的绝对目录
+		String realPath = request.getServletContext().getRealPath("/");
+		File file = new File(realPath + "\\resources\\admin\\easyui\\css\\icons");
+		List<String>icons = new ArrayList<String>();
+		if(!(file.exists())) { //如果指定目录不存在，返回错误信息
+			ret.put("type","error");
+			ret.put("msg", "图标文件目录不存在");
+			return ret;
+		}
+		// 获取目录下的文件内容
+		File[] listFiles = file.listFiles();
+		//利用for循环遍历出文件内容
+		for(File f:listFiles) {
+			//System.out.println(f.getName()); 测试打印图标文件
+			if(f != null && f.getName().contains(".png")) {
+				icons.add("icon-" + f.getName().substring(0,f.getName().indexOf(".")).replace("_", "-"));
+			}
+		}
+		ret.put("type", "success");
+		ret.put("content", icons);
+		return ret;
+	}
+	
+	/**
 	 * 菜单添加
 	 * @param menu
 	 * @return
@@ -121,12 +136,9 @@ public class MenuController {
 		}
 		//打印数据库操作条数
 		int i =  menuService.add(menu);
-<<<<<<< HEAD
 		if( i == 1) {
 			//当执行结果为1条时，需要手动commit
 		}
-=======
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 		System.out.println("----"+i);
 		ret.put("type", "success");
 		ret.put("msg", "添加成功");

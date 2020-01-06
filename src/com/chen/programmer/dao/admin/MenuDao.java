@@ -1,11 +1,9 @@
 package com.chen.programmer.dao.admin;
 
-<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
-=======
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 import org.springframework.stereotype.Repository;
 
 import com.chen.programmer.entity.admin.Menu;
@@ -18,8 +16,8 @@ import com.chen.programmer.entity.admin.Menu;
 @Repository   //标识为dao类
 public interface MenuDao {
 	public int add(Menu menu);
-<<<<<<< HEAD
 	public LinkedList<Menu> findList(HashMap<String, Object> queryHashMap);
-=======
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
+	
+	public List<Menu> findTopList();
+	public int getTotal(HashMap<String, Object> queryMap);
 }

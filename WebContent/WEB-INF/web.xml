@@ -78,11 +78,7 @@
 	</error-page>
   
 	  <welcome-file-list>
-<<<<<<< HEAD
 	    <welcome-file>system/login</welcome-file>
-=======
-	    <welcome-file>/views/system/login.jsp</welcome-file>
->>>>>>> 7655b1d1194d89e66e1f1407aa36791c40a95037
 	  </welcome-file-list>
   
 </web-app>
