@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>欢迎页面</title>
+
 </head>
 <body>
 <div class="easyui-layout" data-options="fit:true">
@@ -18,8 +19,8 @@
                 <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove()" plain="true">删除</a>
             </div>
             <div class="wu-toolbar-search">
-                <label>菜单名称：</label><input class="wu-text s" style="width:100px">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-search">搜索</a>
+                <label>菜单名称：</label><input id="search-name" class="wu-text s" style="width:100px">
+                <a href="#" id="search-btn" class="easyui-linkbutton" iconCls="icon-search">搜索</a>
             </div>
         </div>
         <!-- End of toolbar -->
@@ -37,8 +38,9 @@
             <tr>
                 <td align="right">上级菜单:</td>
                 <td>
-                	<select name="parentId" class="easyui-combobox" panelHeight="auto" style="width:268px">
-		                <option value="0">顶级分类</option>
+                	<select id="parentId" name="parentId" class="easyui-combobox" panelHeight="auto" style="width:268px">
+		                <option value="" selected hidden></option>
+		                <option value="1">顶级分类</option>
 		                <c:forEach items="${topList }" var="menu">
 		                <option value="${menu.id }">${menu.name }</option>
 		                </c:forEach>
@@ -52,7 +54,7 @@
             <tr>
                 <td valign="top" align="right">菜单图标:</td>
                 <td>
-                <input type="text" id="icon" name="icon" class="wu-text easyui-validatebox" data-options="required:true,missingMessage:'请填写菜单图标名称'" />
+                <input type="text" id="add-icon" name="icon" class="wu-text easyui-validatebox" data-options="required:true,missingMessage:'请填写菜单图标名称'" />
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="selectIcon()" plain="true">选择</a>
                 </td>
             </tr>
@@ -61,6 +63,12 @@
 </div>
 <!-- End of easyui-dialog -->
 
+
+<style>
+	.selected{
+		background:red;
+	}
+</style>
 <!-- 选择图标弹窗 -->
 <div id="select-icon-dialog" class="easyui-dialog" data-options="closed:true,iconCls:'icon-save'" style="width:480px;height:450px; padding:10px;">
 	<table id="icons-table" cellspacing="8">
@@ -88,8 +96,8 @@
 		var validate = $("#add-form").form("validate");
 		var name = $("#name").val();
 		var url = $("#url").val();
-		var icon = $("#icon").val();
-		var parentId = $("#parentId").val(); 
+		var icon = $("#add-icon").val();
+		var parentId = $("#parentId").combobox('getValue'); // 使用.val()无法获取到option的value....why?????
 		if(!validate){
 			$.messager.alert("消息提醒","请检查你输入的数据:", "warning");
 			return;
@@ -107,6 +115,7 @@
 				if(data.type == 'success'){
 					$.messager.alert('信息提示','添加成功！','info');
 					$('#add-dialog').dialog('close');
+					$('#data-datagrid').datagrid('reload');
 				}else
 				{
 					$.messager.alert('信息提示',data.msg,'warining');
@@ -256,11 +265,21 @@
 	}
 	
 	/**
+	* 搜索按钮监听,查找带有指定字符行
+	*/
+	$("#search-btn").click(function(){
+		$('#data-datagrid').datagrid('reload',{
+			name:$("#search-name").val()
+		});
+		
+	});
+	
+	/**
 	* Name 载入数据
 	*/
 	$('#data-datagrid').datagrid({
 		url:'../admin/menu/list',
-		loadFilter:pagerFilter,		
+		//loadFilter:pagerFilter,		
 		rownumbers:true, // 设置显示行号
 		singleSelect:true,  // false设置可以多选，true设置只能单选
 		pageSize:20,  // 设置每页显示20条         
@@ -312,9 +331,11 @@
 		/**
 		*点击图标后的动作
 		*/
-		function selected(e){
-			alert(1111);
-			console.log("123132");
+		// debugger html断点
+		selected = function(e){//此处为 function selected(e){}时提示undefined
+			//alert("selected");
+			$(".icon-td").removeClass('selected');
+			$(e).parent("td").addClass('selected');
 		}
 		
 		
@@ -325,13 +346,18 @@
             buttons: [{
                 text: '确定',
                 iconCls: 'icon-ok',
-                //点击‘确定’之后就去调用'add'方法（第73行）
-                handler: add
+                handler: function(){
+                	var icon = $(".selected a").attr('class');
+                	//将icon的值显示在input里
+                    $("#add-icon").val(icon)
+                    //关闭弹窗
+                    $('#select-icon-dialog').dialog('close'); 
+                }
             }, {
                 text: '取消',
                 iconCls: 'icon-cancel',
                 handler: function () {
-                    $('#add-dialog').dialog('close');                    
+                    $('#select-icon-dialog').dialog('close'); 
                 }
             }]
         });

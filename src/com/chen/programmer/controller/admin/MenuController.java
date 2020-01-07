@@ -124,6 +124,8 @@ public class MenuController {
 		if(StringUtil.isEmpty(menu.getIcon())){
 			ret.put("type", "error");
 			ret.put("msg", "请填写菜单图标");
+			System.out.println("----");
+			System.out.println(menu.getIcon());
 			return ret;
 		}
 		if(menuService.add(menu)<0) {
@@ -135,11 +137,8 @@ public class MenuController {
 			menu.setParentId(1);
 		}
 		//打印数据库操作条数
-		int i =  menuService.add(menu);
-		if( i == 1) {
-			//当执行结果为1条时，需要手动commit
-		}
-		System.out.println("----"+i);
+		//int i =  menuService.add(menu);
+		
 		ret.put("type", "success");
 		ret.put("msg", "添加成功");
 		return ret;

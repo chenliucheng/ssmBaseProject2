@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- id要与用到的方法名对应；parameterType标识传入的参数类型，要与方法的传入类型对应；resultType标识返回的参数类型，要与方法的返回类型对应-->
     <insert id="add" parameterType="Menu" >
         <!-- #{name} 表示取名字为name的变量  -->
-		insert into  menu(id,parentId,name,url,icon) values (null,#{parentId},#{name},#{url},#{icon})
+		insert into menu(id,parentId,name,url,icon) values (null,#{parentId},#{name},#{url},#{icon})
 	</insert>
 	
     <!-- 菜单信息模糊分页查询操作 -->
@@ -29,13 +29,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <!-- 菜单信息模糊分页搜索查询总记录数 -->
 	<select id="getTotal" parameterType="HashMap" resultType="Integer">
-		select count(*) from menu where 1 = 1  
-		<if test="parentId != null">
+		select count(*) from menu <!-- where 1 = 1  
+		 <if test="parentId != null">
 			and parentId = #{parentId}  
 		</if>
 		<if test="name != null">
 			and name like '%${name}%' 
-		</if>
+		</if>-->
 	</select>
 	<!-- 获取顶级菜单信息 -->
 	<select id="findTopList" parameterType="HashMap" resultType="Menu">
