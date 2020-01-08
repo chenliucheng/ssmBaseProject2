@@ -65,7 +65,7 @@ public class MenuController {
 		queryHashMap.put("name", name);
 		LinkedList<Menu> findList = menuService.findList(queryHashMap);
 		ret.put("rows", findList);
-		ret.put("total", 10);
+		ret.put("total", 10);//显示总数据，需要从数据库中查询
 		return ret;
 	}
 	
